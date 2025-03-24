@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node{
+    int elem;
+    struct node *next;
+}NodeType, *NodePtr;
+
+void insertFront(NodePtr *list, int item);
+void displayList(NodePtr list);
+void insertSorted(NodePtr *list, int item);
+void deleteItem(NodePtr *list, int item);
+int main(){
+
+    NodePtr myList = NULL;
+    displayList(myList);
+    insertFront(&myList, 10);
+    displayList(myList);
+    insertFront(&myList, 5);
+    displayList(myList);
+    insertFront(&myList, 2);
+    displayList(myList);
+    insertFront(&myList, 6);
+    displayList(myList);
+    insertSorted(&myList, 1);
+    displayList(myList);
+    return 0;
+}
+void insertFront(NodePtr *list, int item){
+    NodePtr temp = malloc(sizeof(NodeType));
+
+    if(temp == NULL){
+        return;
+    }
+    temp->elem = item;
+    temp->next = *list;
+    *list = temp;
+}   
+void displayList(NodePtr list){
+    printf("{");
+
+    while(list != NULL){
+        printf("%d", list->elem);
+
+        if(list->next != NULL){
+            printf(" -> ");
+        }
+        list = list->next;
+    }
+
+    printf("}\n");
+}
+
+void deleteItem(NodePtr *list, int item){
+    // NodePtr *curr, temp;
+
+    // for(curr = list; *curr != NULL && (*curr)->elem != item; curr = &(*curr)->next){
+    //     if(*curr != NULL){
+    //         temp = *curr;
+    //         *curr = temp->next;
+    //         free(temp);
+    //     }
+    // }
+
+    NodePtr temp, *curr = list;
+    while(*curr != NULL && (*curr)->elem != item){
+        curr = &(*curr)->next;
+    }
+         if(*curr != NULL){
+            temp = *curr;
+            *curr = temp->next;
+            free(temp);
+        }
+}
+
+void insertSorted(NodePtr *list, int item) {
+    NodePtr temp, *curr = list;
+
+    // Traverse to the correct position in the sorted list
+    while (*curr != NULL && (*curr)->elem <= item) {
+        curr = &(*curr)->next;
+    }
+    temp = (NodePtr) malloc(sizeof(NodeType)); 
+  
+    temp->elem = item;
+    temp->next = *curr;
+    *curr = temp;
+}
