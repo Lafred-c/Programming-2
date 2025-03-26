@@ -1,0 +1,114 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef char String[30];
+typedef struct{
+    String fname;
+    String mname;
+    String lname;
+}Name;
+
+typedef struct{
+    int date;
+    int month;
+    int year;
+}Date;
+
+typedef struct{
+  int stud_ID;
+  Name stud_name;
+  Date stud_bday;
+  String stud_program;
+  int stud_level;
+}Student;
+
+typedef struct{
+    Student *studs;
+    int count;
+    int length;
+}StudAList;
+
+typedef struct node{
+    Student data;
+    struct node *link;
+}StudNode, *StudPtr, *StudList;
+
+// Function to create name
+Name createName(String fname, String mname, String lname);
+// Function to create date
+Date createDate(int date, int month, int year);
+// Function to create student
+void initList(StudAList *list1, int length);
+// Display name
+void displayName(StudAList list1, int count);
+// Display date
+void displaydate(StudAList list1, int count);
+// Display student
+void displayStudent(StudAList list1, int count);
+
+// Insert Into
+int main(){
+
+    StudAList list1;
+    int count = 0;
+    printf("Enter the number of student: ");
+    scanf("%d", &count);
+    initList(&list1, count);
+
+    for(int i = 0; i < count; i++){
+        printf("Enter the student %d information:\n", i + 1);
+        list1.studs[i].stud_name = createName(list1.studs[i].stud_name.fname, 
+                                              list1.studs[i].stud_name.mname, 
+                                              list1.studs[i].stud_name.lname);
+
+    }
+    displayName(list1, count);
+
+
+    free(list1.studs);
+    return 0;
+}
+
+
+Name createName(String fname, String mname, String lname) {
+    Name newName;
+
+    printf("Enter the first name: ");
+    fgets(fname, sizeof(String), stdin);
+    while (getchar() != '\n');
+    strcpy(newName.fname, fname);
+
+    printf("Enter the middle name: ");
+    scanf("%s", newName.mname);
+    while (getchar() != '\n');
+
+    printf("Enter the last name: ");
+    scanf("%s", newName.lname);
+    while (getchar() != '\n');
+    
+
+    return newName;
+}
+
+Date createDate(int date, int month, int year);
+
+void initList(StudAList *list1, int length){
+    list1->studs = malloc(sizeof(Student) * length);
+    list1->count = 0;
+    list1->length = length;
+}
+void displayName(StudAList list1, int count){
+    for(int i = 0; i < count; i++){
+        for(int j = 0; j < count - 1; j++){
+            if (strcmp(list1.studs[j].stud_name.fname, list1.studs[j + 1].stud_name.fname) < 0) {
+               Student temp = list1.studs[j];
+               list1.studs[j] = list1.studs[j + 1];
+                list1.studs[j + 1] = temp;
+            }
+        }
+    }
+     for (int i = 0; i < count; i++) {
+        printf("Student %d: %s %s %s\n", i + 1, list1.studs[i].stud_name.fname, list1.studs[i].stud_name.mname, list1.studs[i].stud_name.lname);
+    }
+}
